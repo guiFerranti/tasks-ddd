@@ -11,4 +11,20 @@ class UserEloquentRepository implements UserRepositoryInterface
     {
         return User::where('email', $email)->first();
     }
+
+    public function findByCpf(string $cpf): ?User
+    {
+        return User::where('cpf', $cpf)->first();
+    }
+
+    public function create(array $data): User
+    {
+        return User::create($data);
+    }
+
+    public function updatePassword(User $user, string $password): void
+    {
+        $user->update(['password' => bcrypt($password)]);
+    }
+
 }

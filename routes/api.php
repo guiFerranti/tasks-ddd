@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,16 @@ use App\Http\Controllers\AuthController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware(['jwt.auth']);
-    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::prefix('users')->group(function () {
+    Route::post('/register', [UserController::class, 'register'])
+        ->withoutMiddleware(['jwt.auth']);
+
+    Route::put('/password', [UserController::class, 'changePassword'])
+        ->middleware('jwt.auth');
+});
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
 });

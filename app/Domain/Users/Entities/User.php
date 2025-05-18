@@ -2,13 +2,15 @@
 
 namespace App\Domain\Users\Entities;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+    use SoftDeletes;
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'cpf', 'password', 'role'
     ];
 
     protected $hidden = [
