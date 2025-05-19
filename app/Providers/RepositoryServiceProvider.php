@@ -14,5 +14,10 @@ class RepositoryServiceProvider extends ServiceProvider
             UserRepositoryInterface::class,
             UserEloquentRepository::class
         );
+
+        $this->app->bind(
+            \App\Domain\Tasks\Repositories\TaskRepositoryInterface::class,
+            \App\Infrastructure\Persistence\Eloquent\TaskEloquentRepository::class
+        );
     }
 }

@@ -51,6 +51,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // ... outros middlewares
         'jwt.auth' => \App\Http\Middleware\AuthenticateWithJWT::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
 
     /**

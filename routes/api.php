@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,4 +31,12 @@ Route::prefix('users')->group(function () {
 
 Route::middleware('jwt.auth')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::apiResource('tasks', TaskController::class)->except(['index', 'show']);
+});
+
+Route::middleware(['jwt.auth', 'admin'])->group(function () {
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
 });
