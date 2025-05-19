@@ -45,6 +45,10 @@ class Handler extends ExceptionHandler
 
     protected function handleApiException($request, Throwable $exception)
     {
+        if ($exception instanceof ValidationException) {
+            return $this->invalidJson($request, $exception);
+        }
+
         if ($exception instanceof UnauthorizedHttpException) {
             return $this->handleJwtExceptions($exception);
         }
