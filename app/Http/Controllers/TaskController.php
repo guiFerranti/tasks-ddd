@@ -17,8 +17,42 @@ use App\Domain\Users\Entities\User;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 
+/**
+ * @group Tarefas
+ *
+ * Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+ */
 class TaskController extends Controller
 {
+    /**
+     * Criar Nova Tarefa
+     *
+     * Cria uma nova tarefa atribuída a um usuário específico.
+     *
+     * @authenticated
+     * @header Authorization Bearer {token}
+     * @bodyParam title string required Título da tarefa. Example: Reunião de equipe
+     * @bodyParam description string required Descrição detalhada. Example: Discutir planejamento do próximo trimestre
+     * @bodyParam status string required Status inicial (pending, in_progress, completed). Example: pending
+     * @bodyParam assigned_to integer required ID do usuário atribuído. Example: 2
+     *
+     * @response 201 {
+     *   "id": 1,
+     *   "title": "Reunião de equipe",
+     *   "status": "pending",
+     *   "assigned_to": 2,
+     *   "created_by": 1,
+     *   "created_at": "2024-05-20T00:00:00.000000Z"
+     * }
+     * @response 400 {
+     *   "error": "Usuário atribuído não encontrado"
+     * }
+     * @response 422 {
+     *   "errors": {
+     *     "title": ["O campo título é obrigatório"]
+     *   }
+     * }
+     */
     public function store(Request $request, CreateTaskUseCase $useCase)
     {
         $dto = new CreateTaskDTO(
@@ -36,6 +70,26 @@ class TaskController extends Controller
         }
     }
 
+    /**
+     * Atualizar Tarefa
+     *
+     * Atualiza informações de uma tarefa existente.
+     *
+     * @authenticated
+     * @urlParam task integer required ID da tarefa. Example: 1
+     * @bodyParam title string Título. Example: Reunião atualizada
+     * @bodyParam description string Descrição. Example: Novo tópico: Orçamento
+     * @bodyParam status string Status (pending, in_progress, completed). Example: in_progress
+     *
+     * @response 200 {
+     *   "id": 1,
+     *   "title": "Reunião atualizada",
+     *   "status": "in_progress"
+     * }
+     * @response 403 {
+     *   "error": "Apenas o criador pode editar a tarefa"
+     * }
+     */
     public function update(Request $request, Task $task, UpdateTaskUseCase $useCase)
     {
         $dto = new UpdateTaskDTO(
@@ -52,6 +106,23 @@ class TaskController extends Controller
         }
     }
 
+    /**
+     * Excluir Tarefa (Admin)
+     *
+     * Remove uma tarefa do sistema (soft delete, apenas para administradores).
+     *
+     * @authenticated
+     * @header Authorization Bearer {token}
+     * @urlParam task integer required ID da tarefa. Example: 1
+     *
+     * @response 204
+     * @response 403 {
+     *   "error": "Acesso negado: apenas administradores"
+     * }
+     * @response 400 {
+     *   "error": "Não é possível excluir tarefas concluídas"
+     * }
+     */
     public function destroy(Task $task, DeleteTaskUseCase $useCase)
     {
         try {
@@ -62,6 +133,23 @@ class TaskController extends Controller
         }
     }
 
+    /**
+     * Listar Tarefas com Filtros
+     *
+     * Lista tarefas com filtragem avançada.
+     *
+     * @authenticated
+     * @queryParam assignedTo integer Filtrar por usuário atribuído. Example: 2
+     * @queryParam status string Filtrar por status. Example: pending
+     * @queryParam createdAfter date Filtrar por data de criação (YYYY-MM-DD). Example: 2024-05-01
+     *
+     * @response 200 [{
+     *   "id": 1,
+     *   "title": "Reunião de equipe",
+     *   "status": "pending",
+     *   "assigned_to": 2
+     * }]
+     */
     public function index(Request $request, ListTasksUseCase $useCase)
     {
         $dto = new ListTasksDTO(
@@ -74,6 +162,23 @@ class TaskController extends Controller
         return response()->json($tasks);
     }
 
+    /**
+     * Listar Tarefas Excluídas (Admin)
+     *
+     * Lista tarefas removidas via soft delete (apenas administradores).
+     *
+     * @authenticated
+     * @header Authorization Bearer {token}
+     * @queryParam assignedTo integer Filtrar por usuário atribuído. Example: 2
+     * @queryParam status string Filtrar por status antes da exclusão. Example: completed
+     * @queryParam createdAfter date Filtrar por data de criação (YYYY-MM-DD). Example: 2024-05-01
+     *
+     * @response 200 [{
+     *   "id": 1,
+     *   "title": "Tarefa excluída",
+     *   "deleted_at": "2024-05-20T12:00:00.000000Z"
+     * }]
+     */
     public function indexDeleted(Request $request, ListDeletedTasksUseCase $useCase)
     {
         $dto = new ListTasksDTO(
@@ -86,6 +191,26 @@ class TaskController extends Controller
         return response()->json($tasks);
     }
 
+    /**
+     * Detalhes da Tarefa
+     *
+     * Retorna informações detalhadas de uma tarefa específica.
+     *
+     * @authenticated
+     * @urlParam id integer required ID da tarefa. Example: 1
+     *
+     * @response 200 {
+     *   "id": 1,
+     *   "title": "Reunião de equipe",
+     *   "description": "Discutir planejamento",
+     *   "status": "pending",
+     *   "created_by": 1,
+     *   "assigned_to": 2
+     * }
+     * @response 404 {
+     *   "error": "Tarefa não encontrada"
+     * }
+     */
     public function show(int $id, GetTaskByIdUseCase $useCase)
     {
         $task = $useCase->execute($id);
