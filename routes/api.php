@@ -1,62 +1,47 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+// routes/api.php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TaskController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
+// login
 Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware(['jwt.auth']);
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
+// create user
 Route::prefix('users')->group(function () {
-    Route::post('/register', [UserController::class, 'register'])
-        ->withoutMiddleware(['jwt.auth']);
-
-    Route::put('/password', [UserController::class, 'changePassword'])
-        ->middleware('jwt.auth');
+    Route::post('/register', [UserController::class, 'register']);
 });
 
 Route::middleware('jwt.auth')->group(function () {
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
-});
+    // logout
+    Route::prefix('auth')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
 
-Route::middleware('jwt.auth')->group(function () {
-    Route::apiResource('tasks', TaskController::class)->except(['index', 'show']);
-});
+    // users
+    Route::prefix('users')->group(function () {
+        Route::put('/password', [UserController::class, 'changePassword']);
+        Route::get('/{id}', [UserController::class, 'show']);
+    });
 
-Route::middleware(['jwt.auth', 'admin'])->group(function () {
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
-});
+    // tasks
+    Route::prefix('tasks')->group(function () {
+        Route::get('/', [TaskController::class, 'index']);
+        Route::post('/', [TaskController::class, 'store']);
+        Route::get('/{task}', [TaskController::class, 'show']);
+        Route::put('/{task}', [TaskController::class, 'update']);
+    });
 
-Route::middleware('jwt.auth')->group(function () {
-    Route::get('/tasks', [TaskController::class, 'index']);
-});
+    // admins routes
+    Route::middleware('admin')->group(function () {
+        // users
+        Route::get('/users', [UserController::class, 'index']);
 
-Route::middleware(['jwt.auth', 'admin'])->group(function () {
-    Route::get('/tasks/deleted', [TaskController::class, 'indexDeleted']);
-});
-
-Route::middleware('jwt.auth')->group(function () {
-    Route::get('/users/{id}', [UserController::class, 'show']);
-});
-
-Route::middleware(['jwt.auth', 'admin'])->group(function () {
-    Route::get('/users', [UserController::class, 'index']);
-});
-
-Route::middleware('jwt.auth')->group(function () {
-    Route::get('/tasks/{task}', [TaskController::class, 'show']);
+        // tasks
+        Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+        Route::get('/tasks/deleted', [TaskController::class, 'indexDeleted']);
+    });
 });
