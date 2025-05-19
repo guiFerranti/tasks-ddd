@@ -7,12 +7,12 @@ use App\Http\Controllers\TaskController;
 
 // login
 Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware('jwt.auth');
 });
 
 // register user
 Route::prefix('users')->group(function () {
-    Route::post('/', [UserController::class, 'register']);
+    Route::post('/', [UserController::class, 'register'])->withoutMiddleware('jwt.auth');
 });
 
 // auth routes
