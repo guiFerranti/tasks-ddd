@@ -65,23 +65,23 @@ class Handler extends ExceptionHandler
             ? $exception->getStatusCode()
             : 500;
 
-        return response()->json([
-            'error' => $exception->getMessage() ?: 'Erro interno do servidor'
-        ], $statusCode);
+        $errorMessage = $this->getErrorMessage($exception, $statusCode);
+
+        return response()->json(['error' => $errorMessage], $statusCode);
     }
 
     protected function getErrorMessage(Throwable $exception, int $statusCode): string
     {
-        return match ($statusCode) {
+        $message = match ($statusCode) {
             401 => 'Não autorizado',
             403 => 'Acesso proibido',
-            404 => 'Recurso não encontrado',
-            405 => 'Método não permitido',
             419 => 'Sessão expirada',
             422 => 'Dados inválidos',
             429 => 'Muitas requisições',
             default => $exception->getMessage() ?: 'Erro interno do servidor',
         };
+
+        return $exception->getMessage() ?: $message;
     }
 
     protected function invalidJson($request, ValidationException $exception)
