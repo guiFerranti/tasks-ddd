@@ -14,8 +14,42 @@ use App\Domain\Users\Entities\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 
+/**
+ * @group Usuários
+ *
+ * Endpoints para gerenciamento de usuários (CRUD, alteração de senha).
+ */
 class UserController extends Controller
 {
+    /**
+     * Registrar Novo Usuário
+     *
+     * Cria um novo usuário com role padrão "user".
+     *
+     * @bodyParam name string required Nome completo. Example: João Silva
+     * @bodyParam email string required Email válido. Example: joao@exemplo.com
+     * @bodyParam cpf string required CPF (formato: 123.456.789-00). Example: 123.456.789-00
+     * @bodyParam password string required Senha (mínimo 6 caracteres). Example: senha123
+     * @bodyParam password_confirmation string required Confirmação da senha. Example: senha123
+     *
+     * @response 201 {
+     *   "id": 1,
+     *   "name": "João Silva",
+     *   "email": "joao@exemplo.com",
+     *   "cpf": "123.456.789-00",
+     *   "role": "user",
+     *   "created_at": "2024-05-20T00:00:00.000000Z"
+     * }
+     * @response 400 {
+     *   "error": "CPF já cadastrado"
+     * }
+     * @response 422 {
+     *   "errors": {
+     *     "name": ["O campo nome é obrigatório"],
+     *     "email": ["Formato de email inválido"]
+     *   }
+     * }
+     */
     public function register(Request $request, RegisterUserUseCase $useCase)
     {
         $dto = new RegisterUserDTO(
@@ -33,6 +67,26 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Alterar Senha do Usuário
+     *
+     * Atualiza a senha do usuário autenticado.
+     *
+     * @authenticated
+     * @header Authorization Bearer {token}
+     * @bodyParam current_password string required Senha atual. Example: senha123
+     * @bodyParam new_password string required Nova senha (diferente da atual). Example: novaSenha456
+     *
+     * @response 200 {
+     *   "message": "Senha alterada com sucesso"
+     * }
+     * @response 401 {
+     *   "error": "Senha atual incorreta"
+     * }
+     * @response 403 {
+     *   "error": "Acesso não autorizado"
+     * }
+     */
     public function changePassword(Request $request, ChangePasswordUseCase $useCase)
     {
         $dto = new ChangePasswordDTO(
@@ -48,6 +102,26 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Obter Detalhes do Usuário
+     *
+     * Retorna os detalhes de um usuário específico.
+     *
+     * @authenticated
+     * @urlParam id integer required ID do usuário. Example: 1
+     *
+     * @response 200 {
+     *   "id": 1,
+     *   "name": "João Silva",
+     *   "email": "joao@exemplo.com",
+     *   "cpf": "123.456.789-00",
+     *   "role": "user",
+     *   "created_at": "2024-05-20T00:00:00.000000Z"
+     * }
+     * @response 404 {
+     *   "error": "Usuário não encontrado"
+     * }
+     */
     public function show(int $id, GetUserByIdUseCase $useCase)
     {
         $user = $useCase->execute($id);
@@ -59,6 +133,24 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    /**
+     * Listar Todos Usuários (Admin)
+     *
+     * Lista todos os usuários registrados (apenas administradores).
+     *
+     * @authenticated
+     * @header Authorization Bearer {token}
+     *
+     * @response 200 [{
+     *   "id": 1,
+     *   "name": "Admin",
+     *   "email": "admin@exemplo.com",
+     *   "role": "admin"
+     * }]
+     * @response 403 {
+     *   "error": "Acesso negado: apenas administradores"
+     * }
+     */
     public function index(Request $request, ListAllUsersUseCase $useCase)
     {
         try {
@@ -69,12 +161,51 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Atualizar Usuário
+     *
+     * Atualiza informações do usuário (exceto senha).
+     *
+     * @authenticated
+     * @urlParam id integer required ID do usuário. Example: 1
+     * @bodyParam name string Nome. Example: João Silva Alterado
+     * @bodyParam email string Email. Example: novojoao@exemplo.com
+     * @bodyParam cpf string CPF. Example: 987.654.321-00
+     *
+     * @response 200 {
+     *   "id": 1,
+     *   "name": "João Silva Alterado",
+     *   "email": "novojoao@exemplo.com",
+     *   "cpf": "987.654.321-00",
+     *   "role": "user"
+     * }
+     * @response 403 {
+     *   "error": "Acesso negado: você só pode atualizar seu próprio perfil"
+     * }
+     */
     public function update(Request $request, int $id, UpdateUserUseCase $useCase) {
         $user = User::findOrFail($id);
         $updatedUser = $useCase->execute($user, $request->all());
         return new UserResource($updatedUser);
     }
 
+    /**
+     * Excluir Usuário (Soft Delete - Admin)
+     *
+     * Remove um usuário do sistema (soft delete, apenas administradores).
+     *
+     * @authenticated
+     * @header Authorization Bearer {token}
+     * @urlParam id integer required ID do usuário. Example: 1
+     *
+     * @response 204
+     * @response 403 {
+     *   "error": "Acesso negado: apenas administradores"
+     * }
+     * @response 404 {
+     *   "error": "Usuário não encontrado"
+     * }
+     */
     public function destroy(int $id, DeleteUserUseCase $useCase) {
         $targetUser = User::findOrFail($id);
         $useCase->execute(auth()->user(), $targetUser);
