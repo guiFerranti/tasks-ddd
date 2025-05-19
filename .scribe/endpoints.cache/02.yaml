@@ -21,6 +21,7 @@ endpoints:
       authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {token}'
       Content-Type: application/json
       Accept: application/json
     urlParameters: []

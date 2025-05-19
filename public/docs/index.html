@@ -498,6 +498,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "http://localhost:8000/api/tasks?assignedTo=2&amp;status=pending&amp;createdAfter=2024-05-01" \
+    --header "Authorization: Bearer {token}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -516,6 +517,7 @@ Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
+    "Authorization": "Bearer {token}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -590,6 +592,17 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/tasks</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Authorization</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Authorization" class="auth-value"               data-endpoint="GETapi-tasks"
+               value="Bearer {token}"
+               data-component="header">
+    <br>
+<p>Example: <code>Bearer {token}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;

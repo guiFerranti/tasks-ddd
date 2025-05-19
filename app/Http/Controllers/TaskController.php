@@ -139,6 +139,7 @@ class TaskController extends Controller
      * Lista tarefas com filtragem avançada.
      *
      * @authenticated
+     * @header Authorization Bearer {token}
      * @queryParam assignedTo integer Filtrar por usuário atribuído. Example: 2
      * @queryParam status string Filtrar por status. Example: pending
      * @queryParam createdAfter date Filtrar por data de criação (YYYY-MM-DD). Example: 2024-05-01

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "3b9bcdfd-8c3a-4940-af21-1913693b8417",
+        "_postman_id": "17b3cbb2-84e1-4f5d-98ab-9177210558af",
         "description": "API para gest\u00e3o de tarefas colaborativas",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -147,6 +147,10 @@
                         },
                         "method": "GET",
                         "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
                             {
                                 "key": "Content-Type",
                                 "value": "application\/json"
