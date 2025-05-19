@@ -36,4 +36,9 @@ class UserEloquentRepository implements UserRepositoryInterface
     {
         return User::all();
     }
+
+    public function findAllPaginated(int $perPage)
+    {
+        return User::paginate($perPage);
+    }
 }

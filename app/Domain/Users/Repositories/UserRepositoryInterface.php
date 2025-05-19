@@ -12,4 +12,5 @@ interface UserRepositoryInterface
     public function updatePassword(User $user, string $password): void;
     public function findById(int $id): ?User;
     public function findAll();
+    public function findAllPaginated(int $perPage);
 }
