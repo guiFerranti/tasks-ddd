@@ -10,15 +10,12 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-// create user
+// register user
 Route::prefix('users')->group(function () {
-    Route::post('/register', [UserController::class, 'register']);
+    Route::post('/', [UserController::class, 'register']);
 });
 
-Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware(['jwt.auth', 'admin']);
-
-Route::put('/users/{id}', [UserController::class, 'update'])->middleware('jwt.auth');
-
+// auth routes
 Route::middleware('jwt.auth')->group(function () {
     // logout
     Route::prefix('auth')->group(function () {
@@ -29,6 +26,7 @@ Route::middleware('jwt.auth')->group(function () {
     Route::prefix('users')->group(function () {
         Route::put('/password', [UserController::class, 'changePassword']);
         Route::get('/{id}', [UserController::class, 'show']);
+        Route::put('/{id}', [UserController::class, 'update']);
     });
 
     // tasks
@@ -39,13 +37,18 @@ Route::middleware('jwt.auth')->group(function () {
         Route::put('/{task}', [TaskController::class, 'update']);
     });
 
-    // admins routes
+    // admin routes
     Route::middleware('admin')->group(function () {
         // users
-        Route::get('/users', [UserController::class, 'index']);
+        Route::prefix('users')->group(function () {
+            Route::get('/', [UserController::class, 'index']);
+            Route::delete('/{id}', [UserController::class, 'destroy']);
+        });
 
-        // tasks
-        Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
-        Route::get('/tasks/deleted', [TaskController::class, 'indexDeleted']);
+
+        Route::prefix('tasks')->group(function () {
+            Route::delete('/{task}', [TaskController::class, 'destroy']);
+            Route::get('/deleted', [TaskController::class, 'indexDeleted']);
+        });
     });
 });
