@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Application\DTOs\ChangePasswordDTO;
 use App\Application\DTOs\RegisterUserDTO;
+use App\Application\DTOs\UpdateUserDTO;
 use App\Application\UseCases\Users\ChangePasswordUseCase;
 use App\Application\UseCases\Users\DeleteUserUseCase;
 use App\Application\UseCases\Users\GetUserByIdUseCase;
@@ -11,6 +12,7 @@ use App\Application\UseCases\Users\ListAllUsersUseCase;
 use App\Application\UseCases\Users\RegisterUserUseCase;
 use App\Application\UseCases\Users\UpdateUserUseCase;
 use App\Domain\Users\Entities\User;
+use App\Http\Requests\UpdateUserValidator;
 use App\Http\Resources\UserResource;
 use App\Infrastructure\Http\Validators\Users\ChangePasswordValidator;
 use App\Infrastructure\Http\Validators\Users\RegisterUserValidator;
@@ -181,10 +183,23 @@ class UserController extends Controller
      *   "error": "Acesso negado: você só pode atualizar seu próprio perfil"
      * }
      */
-    public function update(Request $request, int $id, UpdateUserUseCase $useCase) {
-        $user = User::findOrFail($id);
-        $updatedUser = $useCase->execute($user, $request->all());
-        return new UserResource($updatedUser);
+    public function update(UpdateUserValidator $request, int $id, UpdateUserUseCase $useCase)
+    {
+        try {
+            $validated = $request->validated();
+            $dto = new UpdateUserDTO(
+                id: $id,
+                name: $validated['name'] ?? null,
+                email: $validated['email'] ?? null,
+                cpf: $validated['cpf'] ?? null
+            );
+
+            $updatedUser = $useCase->execute($id, $dto);
+            return new UserResource($updatedUser);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     /**

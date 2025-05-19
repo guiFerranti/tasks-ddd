@@ -13,4 +13,5 @@ interface UserRepositoryInterface
     public function findById(int $id): ?User;
     public function findAll();
     public function findAllPaginated(int $perPage);
+    public function update(User $user, array $data): User;
 }

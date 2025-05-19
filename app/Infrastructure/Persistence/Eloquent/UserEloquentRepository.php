@@ -41,4 +41,10 @@ class UserEloquentRepository implements UserRepositoryInterface
     {
         return User::paginate($perPage);
     }
+
+    public function update(User $user, array $data): User
+    {
+        $user->update($data);
+        return $user->fresh();
+    }
 }
