@@ -2,7 +2,13 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +32,76 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($request->is('api/*') || $request->wantsJson()) {
+            return $this->handleApiException($request, $exception);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    protected function handleApiException($request, Throwable $exception)
+    {
+        if ($exception instanceof UnauthorizedHttpException) {
+            return $this->handleJwtExceptions($exception);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return response()->json(['error' => 'Não autenticado'], 401);
+        }
+
+        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+            return response()->json(['error' => 'Recurso não encontrado'], 404);
+        }
+
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return response()->json(['error' => 'Método não permitido'], 405);
+        }
+
+        $statusCode = method_exists($exception, 'getStatusCode')
+            ? $exception->getStatusCode()
+            : 500;
+
+        return response()->json([
+            'error' => $exception->getMessage() ?: 'Erro interno do servidor'
+        ], $statusCode);
+    }
+
+    protected function getErrorMessage(Throwable $exception, int $statusCode): string
+    {
+        return match ($statusCode) {
+            401 => 'Não autorizado',
+            403 => 'Acesso proibido',
+            404 => 'Recurso não encontrado',
+            405 => 'Método não permitido',
+            419 => 'Sessão expirada',
+            422 => 'Dados inválidos',
+            429 => 'Muitas requisições',
+            default => $exception->getMessage() ?: 'Erro interno do servidor',
+        };
+    }
+
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json([
+            'message' => 'Dados inválidos',
+            'errors' => $exception->errors(),
+        ], $exception->status);
+    }
+
+    protected function handleJwtExceptions(UnauthorizedHttpException $exception)
+    {
+        $message = $exception->getMessage();
+        $statusCode = 401;
+
+        return match ($message) {
+            'Token not provided' => response()->json(['error' => 'Token não fornecido'], $statusCode),
+            'Token expired' => response()->json(['error' => 'Token expirado'], $statusCode),
+            'Token has been blacklisted' => response()->json(['error' => 'Token na lista negra'], $statusCode),
+            default => response()->json(['error' => 'Token inválido ou malformado'], $statusCode),
+        };
     }
 }
