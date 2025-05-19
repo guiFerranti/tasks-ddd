@@ -5,12 +5,12 @@
             "key": "baseUrl",
             "type": "string",
             "name": "string",
-            "value": "http:\/\/localhost"
+            "value": "http:\/\/localhost:8000"
         }
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "d2f795a4-8d2c-46a9-81f2-d8813e189877",
+        "_postman_id": "3b9bcdfd-8c3a-4940-af21-1913693b8417",
         "description": "API para gest\u00e3o de tarefas colaborativas",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
