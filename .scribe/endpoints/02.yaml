@@ -1,0 +1,533 @@
+name: Tarefas
+description: |-
+
+  Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/tasks
+    metadata:
+      groupName: Tarefas
+      groupDescription: |-
+
+        Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar Tarefas com Filtros'
+      description: 'Lista tarefas com filtragem avançada.'
+      authenticated: true
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      assignedTo:
+        name: assignedTo
+        description: 'Filtrar por usuário atribuído.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'Filtrar por status.'
+        required: false
+        example: pending
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      createdAfter:
+        name: createdAfter
+        description: 'date Filtrar por data de criação (YYYY-MM-DD).'
+        required: false
+        example: '2024-05-01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      assignedTo: 2
+      status: pending
+      createdAfter: '2024-05-01'
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "title": "Reunião de equipe",
+            "status": "pending",
+            "assigned_to": 2
+          }]
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/tasks
+    metadata:
+      groupName: Tarefas
+      groupDescription: |-
+
+        Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Criar Nova Tarefa'
+      description: 'Cria uma nova tarefa atribuída a um usuário específico.'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        name: title
+        description: 'Título da tarefa.'
+        required: true
+        example: 'Reunião de equipe'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: 'Descrição detalhada.'
+        required: true
+        example: 'Discutir planejamento do próximo trimestre'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'Status inicial (pending, in_progress, completed).'
+        required: true
+        example: pending
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      assigned_to:
+        name: assigned_to
+        description: 'ID do usuário atribuído.'
+        required: true
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      title: 'Reunião de equipe'
+      description: 'Discutir planejamento do próximo trimestre'
+      status: pending
+      assigned_to: 2
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+            "id": 1,
+            "title": "Reunião de equipe",
+            "status": "pending",
+            "assigned_to": 2,
+            "created_by": 1,
+            "created_at": "2024-05-20T00:00:00.000000Z"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "error": "Usuário atribuído não encontrado"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "errors": {
+              "title": ["O campo título é obrigatório"]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/tasks/{task}'
+    metadata:
+      groupName: Tarefas
+      groupDescription: |-
+
+        Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Detalhes da Tarefa'
+      description: 'Retorna informações detalhadas de uma tarefa específica.'
+      authenticated: true
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      task:
+        name: task
+        description: 'The task.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      id:
+        name: id
+        description: 'ID da tarefa.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      task: architecto
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Reunião de equipe",
+            "description": "Discutir planejamento",
+            "status": "pending",
+            "created_by": 1,
+            "assigned_to": 2
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "error": "Tarefa não encontrada"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/tasks/{task_id}'
+    metadata:
+      groupName: Tarefas
+      groupDescription: |-
+
+        Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Atualizar Tarefa'
+      description: 'Atualiza informações de uma tarefa existente.'
+      authenticated: true
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      task_id:
+        name: task_id
+        description: 'The ID of the task.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      task:
+        name: task
+        description: 'ID da tarefa.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      task_id: 1
+      task: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        name: title
+        description: Título.
+        required: false
+        example: 'Reunião atualizada'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      description:
+        name: description
+        description: Descrição.
+        required: false
+        example: 'Novo tópico: Orçamento'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'Status (pending, in_progress, completed).'
+        required: false
+        example: in_progress
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      title: 'Reunião atualizada'
+      description: 'Novo tópico: Orçamento'
+      status: in_progress
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "title": "Reunião atualizada",
+            "status": "in_progress"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "error": "Apenas o criador pode editar a tarefa"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/tasks/{task_id}'
+    metadata:
+      groupName: Tarefas
+      groupDescription: |-
+
+        Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Excluir Tarefa (Admin)'
+      description: 'Remove uma tarefa do sistema (soft delete, apenas para administradores).'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      task_id:
+        name: task_id
+        description: 'The ID of the task.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      task:
+        name: task
+        description: 'ID da tarefa.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      task_id: 1
+      task: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 204
+        content: '{}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "error": "Não é possível excluir tarefas concluídas"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "error": "Acesso negado: apenas administradores"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/tasks/deleted
+    metadata:
+      groupName: Tarefas
+      groupDescription: |-
+
+        Endpoints para gerenciamento de tarefas (CRUD, listagem com filtros).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar Tarefas Excluídas (Admin)'
+      description: 'Lista tarefas removidas via soft delete (apenas administradores).'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      assignedTo:
+        name: assignedTo
+        description: 'Filtrar por usuário atribuído.'
+        required: false
+        example: 2
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      status:
+        name: status
+        description: 'Filtrar por status antes da exclusão.'
+        required: false
+        example: completed
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      createdAfter:
+        name: createdAfter
+        description: 'date Filtrar por data de criação (YYYY-MM-DD).'
+        required: false
+        example: '2024-05-01'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanQueryParameters:
+      assignedTo: 2
+      status: completed
+      createdAfter: '2024-05-01'
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "title": "Tarefa excluída",
+            "deleted_at": "2024-05-20T12:00:00.000000Z"
+          }]
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
