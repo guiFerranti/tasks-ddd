@@ -6,7 +6,7 @@ use App\Domain\Tasks\Enums\TaskStatus;
 use App\Domain\Users\Entities\User;
 use Illuminate\Validation\Rule;
 
-class CreateTaskDTO
+class CreateTaskDTO extends BaseDTO
 {
     public function __construct(
         public readonly string $title,

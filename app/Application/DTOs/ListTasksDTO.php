@@ -4,7 +4,7 @@ namespace App\Application\DTOs;
 
 use App\Domain\Tasks\Enums\TaskStatus;
 
-class ListTasksDTO
+class ListTasksDTO extends BaseDTO
 {
     public function __construct(
         public readonly ?int $assignedTo,

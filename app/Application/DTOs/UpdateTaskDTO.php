@@ -5,7 +5,7 @@ namespace App\Application\DTOs;
 use App\Domain\Tasks\Enums\TaskStatus;
 use Illuminate\Validation\Rule;
 
-class UpdateTaskDTO
+class UpdateTaskDTO extends BaseDTO
 {
     public function __construct(
         public readonly ?string $title,

@@ -2,7 +2,7 @@
 
 namespace App\Application\DTOs;
 
-class RegisterUserDTO
+class RegisterUserDTO extends BaseDTO
 {
     public function __construct(
         public readonly string $name,
