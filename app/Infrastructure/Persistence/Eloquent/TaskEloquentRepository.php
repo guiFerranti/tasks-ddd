@@ -45,4 +45,19 @@ class TaskEloquentRepository implements TaskRepositoryInterface
             throw new \Exception("Não é possível excluir tarefas concluídas", 403);
         }
     }
+
+    public function listTasks(array $filters)
+    {
+        return Task::query()
+            ->when(isset($filters['assignedTo']), function ($query) use ($filters) {
+                $query->where('assigned_to', $filters['assignedTo']);
+            })
+            ->when(isset($filters['status']), function ($query) use ($filters) {
+                $query->where('status', $filters['status']);
+            })
+            ->when(isset($filters['createdAfter']), function ($query) use ($filters) {
+                $query->whereDate('created_at', '>=', $filters['createdAfter']);
+            })
+            ->get();
+    }
 }

@@ -40,3 +40,7 @@ Route::middleware('jwt.auth')->group(function () {
 Route::middleware(['jwt.auth', 'admin'])->group(function () {
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
 });
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::get('/tasks', [TaskController::class, 'index']);
+});

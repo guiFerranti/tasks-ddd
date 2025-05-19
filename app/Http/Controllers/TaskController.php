@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Application\DTOs\CreateTaskDTO;
+use App\Application\DTOs\ListTasksDTO;
 use App\Application\DTOs\UpdateTaskDTO;
 use App\Application\UseCases\Tasks\CreateTaskUseCase;
 use App\Application\UseCases\Tasks\DeleteTaskUseCase;
+use App\Application\UseCases\Tasks\ListTasksUseCase;
 use App\Application\UseCases\Tasks\UpdateTaskUseCase;
 use App\Domain\Tasks\Entities\Task;
 use App\Domain\Tasks\Enums\TaskStatus;
@@ -55,5 +57,17 @@ class TaskController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
         }
+    }
+
+    public function index(Request $request, ListTasksUseCase $useCase)
+    {
+        $dto = new ListTasksDTO(
+            $request->input('assignedTo'),
+            $request->input('status') ? TaskStatus::from($request->input('status')) : null,
+            $request->input('createdAfter')
+        );
+
+        $tasks = $useCase->execute($dto);
+        return response()->json($tasks);
     }
 }
