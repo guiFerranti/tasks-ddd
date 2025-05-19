@@ -7,12 +7,14 @@ use App\Application\DTOs\ListTasksDTO;
 use App\Application\DTOs\UpdateTaskDTO;
 use App\Application\UseCases\Tasks\CreateTaskUseCase;
 use App\Application\UseCases\Tasks\DeleteTaskUseCase;
+use App\Application\UseCases\Tasks\GetTaskByIdUseCase;
 use App\Application\UseCases\Tasks\ListDeletedTasksUseCase;
 use App\Application\UseCases\Tasks\ListTasksUseCase;
 use App\Application\UseCases\Tasks\UpdateTaskUseCase;
 use App\Domain\Tasks\Entities\Task;
 use App\Domain\Tasks\Enums\TaskStatus;
 use App\Domain\Users\Entities\User;
+use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -82,5 +84,16 @@ class TaskController extends Controller
 
         $tasks = $useCase->execute($dto);
         return response()->json($tasks);
+    }
+
+    public function show(int $id, GetTaskByIdUseCase $useCase)
+    {
+        $task = $useCase->execute($id);
+
+        if (!$task) {
+            return response()->json(['error' => 'Tarefa não encontrada'], 404);
+        }
+
+        return new TaskResource($task);
     }
 }

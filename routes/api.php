@@ -56,3 +56,7 @@ Route::middleware('jwt.auth')->group(function () {
 Route::middleware(['jwt.auth', 'admin'])->group(function () {
     Route::get('/users', [UserController::class, 'index']);
 });
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::get('/tasks/{task}', [TaskController::class, 'show']);
+});
