@@ -60,4 +60,19 @@ class TaskEloquentRepository implements TaskRepositoryInterface
             })
             ->get();
     }
+
+    public function listDeletedTasks(array $filters)
+    {
+        return Task::onlyTrashed()
+        ->when(isset($filters['assignedTo']), function ($query) use ($filters) {
+            $query->where('assigned_to', $filters['assignedTo']);
+        })
+            ->when(isset($filters['status']), function ($query) use ($filters) {
+                $query->where('status', $filters['status']);
+            })
+            ->when(isset($filters['createdAfter']), function ($query) use ($filters) {
+                $query->whereDate('created_at', '>=', $filters['createdAfter']);
+            })
+            ->get();
+    }
 }

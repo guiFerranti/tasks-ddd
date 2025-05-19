@@ -14,4 +14,5 @@ interface TaskRepositoryInterface
     public function getByUserWithFilters(User $user, array $filters);
     public function softDelete(Task $task): void;
     public function listTasks(array $filters);
+    public function listDeletedTasks(array $filters);
 }

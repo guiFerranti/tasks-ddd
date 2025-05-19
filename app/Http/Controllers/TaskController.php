@@ -7,6 +7,7 @@ use App\Application\DTOs\ListTasksDTO;
 use App\Application\DTOs\UpdateTaskDTO;
 use App\Application\UseCases\Tasks\CreateTaskUseCase;
 use App\Application\UseCases\Tasks\DeleteTaskUseCase;
+use App\Application\UseCases\Tasks\ListDeletedTasksUseCase;
 use App\Application\UseCases\Tasks\ListTasksUseCase;
 use App\Application\UseCases\Tasks\UpdateTaskUseCase;
 use App\Domain\Tasks\Entities\Task;
@@ -60,6 +61,18 @@ class TaskController extends Controller
     }
 
     public function index(Request $request, ListTasksUseCase $useCase)
+    {
+        $dto = new ListTasksDTO(
+            $request->input('assignedTo'),
+            $request->input('status') ? TaskStatus::from($request->input('status')) : null,
+            $request->input('createdAfter')
+        );
+
+        $tasks = $useCase->execute($dto);
+        return response()->json($tasks);
+    }
+
+    public function indexDeleted(Request $request, ListDeletedTasksUseCase $useCase)
     {
         $dto = new ListTasksDTO(
             $request->input('assignedTo'),

@@ -44,3 +44,7 @@ Route::middleware(['jwt.auth', 'admin'])->group(function () {
 Route::middleware('jwt.auth')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index']);
 });
+
+Route::middleware(['jwt.auth', 'admin'])->group(function () {
+    Route::get('/tasks/deleted', [TaskController::class, 'indexDeleted']);
+});
