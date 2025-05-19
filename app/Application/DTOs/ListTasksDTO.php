@@ -20,4 +20,13 @@ class ListTasksDTO extends BaseDTO
             'createdAfter' => 'sometimes|date_format:Y-m-d',
         ];
     }
+
+    public static function fromValidatedData(array $data): self
+    {
+        return new self(
+            assignedTo: $data['assigned_to'] ?? null,
+            status: isset($data['status']) ? TaskStatus::from($data['status']) : null,
+            createdAfter: $data['created_after'] ?? null
+        );
+    }
 }

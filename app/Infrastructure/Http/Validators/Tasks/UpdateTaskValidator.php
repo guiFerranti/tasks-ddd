@@ -2,9 +2,10 @@
 
 namespace App\Infrastructure\Http\Validators\Tasks;
 
+use App\Domain\Tasks\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Domain\Tasks\Enums\TaskStatus;
+use App\Domain\Tasks\Enums\TaskStatus as TaskStatusEnum;
 
 class UpdateTaskValidator extends FormRequest
 {
@@ -20,7 +21,7 @@ class UpdateTaskValidator extends FormRequest
             'description' => 'sometimes|string|max:1000',
             'status' => [
                 'sometimes',
-                Rule::enum(TaskStatus::class)
+                Rule::enum(TaskStatusEnum::class)
             ],
         ];
     }
@@ -34,7 +35,7 @@ class UpdateTaskValidator extends FormRequest
             'description.string' => 'A descrição deve ser um texto',
             'description.max' => 'A descrição não pode exceder :max caracteres',
 
-            'status.Illuminate\Validation\Rules\Enum' => 'Status inválido. Valores aceitos: '.implode(', ', TaskStatus::values()),
+            'status.Illuminate\Validation\Rules\Enum' => 'Status inválido. Valores aceitos: '.implode(', ', TaskStatusEnum::values()),
         ];
     }
 }

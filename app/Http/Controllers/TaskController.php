@@ -15,6 +15,10 @@ use App\Domain\Tasks\Entities\Task;
 use App\Domain\Tasks\Enums\TaskStatus;
 use App\Domain\Users\Entities\User;
 use App\Http\Resources\TaskResource;
+use App\Infrastructure\Http\Validators\Tasks\CreateTaskValidator;
+use App\Infrastructure\Http\Validators\Tasks\ListTasksValidator;
+use App\Infrastructure\Http\Validators\Tasks\UpdateTaskValidator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 /**
@@ -53,18 +57,16 @@ class TaskController extends Controller
      *   }
      * }
      */
-    public function store(Request $request, CreateTaskUseCase $useCase)
+    public function store(CreateTaskValidator $request, CreateTaskUseCase $useCase)
     {
-        $dto = new CreateTaskDTO(
-            $request->input('title'),
-            $request->input('description'),
-            TaskStatus::from($request->input('status')),
-            User::findOrFail($request->input('assigned_to'))
-        );
-
         try {
+            $dto = CreateTaskDTO::fromValidatedData($request->validated());
+
             $task = $useCase->execute(auth()->user(), $dto);
             return response()->json($task, 201);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Usuário atribuído não encontrado'], 404);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -90,17 +92,15 @@ class TaskController extends Controller
      *   "error": "Apenas o criador pode editar a tarefa"
      * }
      */
-    public function update(Request $request, Task $task, UpdateTaskUseCase $useCase)
+    public function update(UpdateTaskValidator $request, Task $task, UpdateTaskUseCase $useCase)
     {
-        $dto = new UpdateTaskDTO(
-            $request->input('title'),
-            $request->input('description'),
-            TaskStatus::from($request->input('status')),
-        );
-
         try {
+            $validated = $request->validated();
+            $dto = new UpdateTaskDTO(...$validated);
+
             $updatedTask = $useCase->execute($task, $dto);
             return response()->json($updatedTask);
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -151,16 +151,18 @@ class TaskController extends Controller
      *   "assigned_to": 2
      * }]
      */
-    public function index(Request $request, ListTasksUseCase $useCase)
+    public function index(ListTasksValidator $request, ListTasksUseCase $useCase)
     {
-        $dto = new ListTasksDTO(
-            $request->input('assignedTo'),
-            $request->input('status') ? TaskStatus::from($request->input('status')) : null,
-            $request->input('createdAfter')
-        );
+        try {
+            $dto = ListTasksDTO::fromValidatedData($request->validated());
+            $tasks = $useCase->execute($dto);
+            return response()->json($tasks);
 
-        $tasks = $useCase->execute($dto);
-        return response()->json($tasks);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro interno'], 500);
+        }
     }
 
     /**
@@ -180,16 +182,18 @@ class TaskController extends Controller
      *   "deleted_at": "2024-05-20T12:00:00.000000Z"
      * }]
      */
-    public function indexDeleted(Request $request, ListDeletedTasksUseCase $useCase)
+    public function indexDeleted(ListTasksValidator $request, ListDeletedTasksUseCase $useCase)
     {
-        $dto = new ListTasksDTO(
-            $request->input('assignedTo'),
-            $request->input('status') ? TaskStatus::from($request->input('status')) : null,
-            $request->input('createdAfter')
-        );
+        try {
+            $dto = ListTasksDTO::fromValidatedData($request->validated());
+            $tasks = $useCase->execute($dto);
+            return response()->json($tasks);
 
-        $tasks = $useCase->execute($dto);
-        return response()->json($tasks);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao listar tarefas excluídas'], 500);
+        }
     }
 
     /**

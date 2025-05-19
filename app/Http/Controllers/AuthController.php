@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Application\DTOs\LoginDTO;
 use App\Application\UseCases\Users\LoginUserUseCase;
 use App\Application\UseCases\Users\LogoutUserUseCase;
+use App\Infrastructure\Http\Validators\Auth\LoginValidator;
 use Illuminate\Http\Request;
 
 /**
@@ -36,15 +37,14 @@ class AuthController extends Controller
      *   }
      * }
      */
-    public function login(Request $request, LoginUserUseCase $useCase)
+    public function login(LoginValidator $request, LoginUserUseCase $useCase)
     {
-        $dto = new LoginDTO(
-            $request->input('email'),
-            $request->input('password')
-        );
-
         try {
+            $validated = $request->validated();
+            $dto = new LoginDTO(...$validated);
+
             return response()->json($useCase->execute($dto));
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
         }

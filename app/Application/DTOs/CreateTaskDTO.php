@@ -27,4 +27,14 @@ class CreateTaskDTO extends BaseDTO
             'assigned_to' => 'required|exists:users,id',
         ];
     }
+
+    public static function fromValidatedData(array $data): self
+    {
+        return new self(
+            title: $data['title'],
+            description: $data['description'],
+            status: TaskStatus::from($data['status']),
+            assignedTo: User::findOrFail($data['assigned_to'])
+        );
+    }
 }

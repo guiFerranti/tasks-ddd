@@ -12,6 +12,8 @@ use App\Application\UseCases\Users\RegisterUserUseCase;
 use App\Application\UseCases\Users\UpdateUserUseCase;
 use App\Domain\Users\Entities\User;
 use App\Http\Resources\UserResource;
+use App\Infrastructure\Http\Validators\Users\ChangePasswordValidator;
+use App\Infrastructure\Http\Validators\Users\RegisterUserValidator;
 use Illuminate\Http\Request;
 
 /**
@@ -50,18 +52,15 @@ class UserController extends Controller
      *   }
      * }
      */
-    public function register(Request $request, RegisterUserUseCase $useCase)
+    public function register(RegisterUserValidator $request, RegisterUserUseCase $useCase)
     {
-        $dto = new RegisterUserDTO(
-            $request->input('name'),
-            $request->input('email'),
-            $request->input('cpf'),
-            $request->input('password')
-        );
-
         try {
+            $validated = $request->validated();
+            $dto = new RegisterUserDTO(...array_values($validated));
+
             $user = $useCase->execute($dto);
             return response()->json($user, 201);
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -87,16 +86,15 @@ class UserController extends Controller
      *   "error": "Acesso não autorizado"
      * }
      */
-    public function changePassword(Request $request, ChangePasswordUseCase $useCase)
+    public function changePassword(ChangePasswordValidator $request, ChangePasswordUseCase $useCase)
     {
-        $dto = new ChangePasswordDTO(
-            $request->input('current_password'),
-            $request->input('new_password')
-        );
-
         try {
+            $validated = $request->validated();
+            $dto = new ChangePasswordDTO(...$validated);
+
             $useCase->execute(auth()->user(), $dto);
             return response()->json(['message' => 'Senha alterada com sucesso']);
+
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
         }
