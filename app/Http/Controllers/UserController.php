@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Application\DTOs\ChangePasswordDTO;
 use App\Application\DTOs\RegisterUserDTO;
 use App\Application\UseCases\Users\ChangePasswordUseCase;
+use App\Application\UseCases\Users\GetUserByIdUseCase;
+use App\Application\UseCases\Users\ListAllUsersUseCase;
 use App\Application\UseCases\Users\RegisterUserUseCase;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -39,6 +42,27 @@ class UserController extends Controller
             return response()->json(['message' => 'Senha alterada com sucesso']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
+        }
+    }
+
+    public function show(int $id, GetUserByIdUseCase $useCase)
+    {
+        $user = $useCase->execute($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
+
+        return new UserResource($user);
+    }
+
+    public function index(Request $request, ListAllUsersUseCase $useCase)
+    {
+        try {
+            $users = $useCase->execute(auth()->user());
+            return UserResource::collection($users);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 403);
         }
     }
 }

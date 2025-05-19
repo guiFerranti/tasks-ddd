@@ -10,4 +10,6 @@ interface UserRepositoryInterface
     public function findByCpf(string $cpf): ?User;
     public function create(array $data): User;
     public function updatePassword(User $user, string $password): void;
+    public function findById(int $id): ?User;
+    public function findAll();
 }

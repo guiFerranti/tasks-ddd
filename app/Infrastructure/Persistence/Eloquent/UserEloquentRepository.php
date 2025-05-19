@@ -27,4 +27,13 @@ class UserEloquentRepository implements UserRepositoryInterface
         $user->update(['password' => bcrypt($password)]);
     }
 
+    public function findById(int $id): ?User
+    {
+        return User::find($id);
+    }
+
+    public function findAll()
+    {
+        return User::all();
+    }
 }
