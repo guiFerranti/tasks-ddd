@@ -10,12 +10,4 @@ class LoginDTO extends BaseDTO
         public readonly string $email,
         public readonly string $password
     ) {}
-
-    public static function rules(): array
-    {
-        return [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ];
-    }
 }

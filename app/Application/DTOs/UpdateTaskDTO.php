@@ -12,16 +12,4 @@ class UpdateTaskDTO extends BaseDTO
         public readonly ?string $description,
         public readonly ?TaskStatus $status
     ) {}
-
-    public static function rules(): array
-    {
-        return [
-            'title' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string|max:1000',
-            'status' => [
-                'required',
-                Rule::enum(TaskStatus::class)
-            ],
-        ];
-    }
 }

@@ -15,19 +15,6 @@ class CreateTaskDTO extends BaseDTO
         public readonly User $assignedTo
     ) {}
 
-    public static function rules(): array
-    {
-        return [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'status' => [
-                'required',
-                Rule::enum(TaskStatus::class)
-            ],
-            'assigned_to' => 'required|exists:users,id',
-        ];
-    }
-
     public static function fromValidatedData(array $data): self
     {
         return new self(
