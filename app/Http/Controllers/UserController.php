@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Application\DTOs\ChangePasswordDTO;
 use App\Application\DTOs\RegisterUserDTO;
 use App\Application\UseCases\Users\ChangePasswordUseCase;
+use App\Application\UseCases\Users\DeleteUserUseCase;
 use App\Application\UseCases\Users\GetUserByIdUseCase;
 use App\Application\UseCases\Users\ListAllUsersUseCase;
 use App\Application\UseCases\Users\RegisterUserUseCase;
+use App\Application\UseCases\Users\UpdateUserUseCase;
+use App\Domain\Users\Entities\User;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 
@@ -64,5 +67,17 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 403);
         }
+    }
+
+    public function update(Request $request, int $id, UpdateUserUseCase $useCase) {
+        $user = User::findOrFail($id);
+        $updatedUser = $useCase->execute($user, $request->all());
+        return new UserResource($updatedUser);
+    }
+
+    public function destroy(int $id, DeleteUserUseCase $useCase) {
+        $targetUser = User::findOrFail($id);
+        $useCase->execute(auth()->user(), $targetUser);
+        return response()->json(null, 204);
     }
 }

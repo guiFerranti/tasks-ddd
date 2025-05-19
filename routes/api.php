@@ -15,6 +15,10 @@ Route::prefix('users')->group(function () {
     Route::post('/register', [UserController::class, 'register']);
 });
 
+Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware(['jwt.auth', 'admin']);
+
+Route::put('/users/{id}', [UserController::class, 'update'])->middleware('jwt.auth');
+
 Route::middleware('jwt.auth')->group(function () {
     // logout
     Route::prefix('auth')->group(function () {
