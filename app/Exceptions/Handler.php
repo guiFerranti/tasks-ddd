@@ -6,6 +6,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -22,6 +23,11 @@ class Handler extends ExceptionHandler
         'current_password',
         'password',
         'password_confirmation',
+    ];
+
+    protected $dontReport = [
+        ValidationException::class,
+        BadRequestHttpException::class,
     ];
 
     /**
@@ -108,4 +114,6 @@ class Handler extends ExceptionHandler
             default => response()->json(['error' => 'Token inválido ou malformado'], $statusCode),
         };
     }
+
+
 }
