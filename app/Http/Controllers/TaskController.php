@@ -60,7 +60,8 @@ class TaskController extends Controller
     public function store(CreateTaskValidator $request, CreateTaskUseCase $useCase)
     {
         try {
-            $dto = CreateTaskDTO::fromValidatedData($request->validated());
+            $validated = $request->validated();
+            $dto = CreateTaskDTO::fromValidatedData(...$validated);
 
             $task = $useCase->execute(auth()->user(), $dto);
             return response()->json($task, 201);
@@ -96,10 +97,10 @@ class TaskController extends Controller
     {
         try {
             $validated = $request->validated();
-            $dto = new UpdateTaskDTO(...$validated);
+            $dto = UpdateTaskDTO::fromValidatedData($validated);
 
             $updatedTask = $useCase->execute($task, $dto);
-            return response()->json($updatedTask);
+            return new TaskResource($updatedTask);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);

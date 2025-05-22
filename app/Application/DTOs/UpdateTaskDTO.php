@@ -12,4 +12,13 @@ class UpdateTaskDTO extends BaseDTO
         public readonly ?string $description,
         public readonly ?TaskStatus $status
     ) {}
+
+    public static function fromValidatedData(array $data): self
+    {
+        return new self(
+            title: $data['title'] ?? null,
+            description: $data['description'] ?? null,
+            status: isset($data['status']) ? TaskStatus::from($data['status']) : null
+        );
+    }
 }
