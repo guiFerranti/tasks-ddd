@@ -58,7 +58,7 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validated();
-            $dto = new RegisterUserDTO(...array_values($validated));
+            $dto = new RegisterUserDTO(...$validated);
 
             $user = $useCase->execute($dto);
             return response()->json($user, 201);

@@ -61,7 +61,7 @@ class TaskController extends Controller
     {
         try {
             $validated = $request->validated();
-            $dto = CreateTaskDTO::fromValidatedData(...$validated);
+            $dto = CreateTaskDTO::fromValidatedData($validated);
 
             $task = $useCase->execute(auth()->user(), $dto);
             return response()->json($task, 201);
