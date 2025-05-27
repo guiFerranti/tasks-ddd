@@ -5,7 +5,7 @@ namespace Tests\Unit\Application\UseCases\Users;
 use App\Application\DTOs\LoginDTO;
 use App\Application\UseCases\Users\LoginUserUseCase;
 use App\Domain\Users\Repositories\UserRepositoryInterface;
-use App\Domain\Users\Entities;
+use App\Domain\Users\Entities\User;
 use Illuminate\Support\Facades\Hash;
 use Mockery;
 use Tests\TestCase;
@@ -33,7 +33,7 @@ class LoginUserUseCaseTest extends TestCase
     /** @test */
     public function it_returns_token_for_valid_credentials()
     {
-        $user = new Entities\User([
+        $user = new User([
             'email' => 'test@example.com',
             'password' => Hash::make('validPassword123')
         ]);
@@ -82,7 +82,7 @@ class LoginUserUseCaseTest extends TestCase
     /** @test */
     public function it_throws_exception_for_invalid_password()
     {
-        $user = new Entities\User([
+        $user = new User([
             'email' => 'test@example.com',
             'password' => Hash::make('validPassword123')
         ]);
