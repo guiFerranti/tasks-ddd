@@ -187,12 +187,8 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validated();
-            $dto = new UpdateUserDTO(
-                id: $id,
-                name: $validated['name'] ?? null,
-                email: $validated['email'] ?? null,
-                cpf: $validated['cpf'] ?? null
-            );
+            $validated['id'] = $id;
+            $dto = new UpdateUserDTO(...$validated);
 
             $updatedUser = $useCase->execute($id, $dto);
             return new UserResource($updatedUser);
