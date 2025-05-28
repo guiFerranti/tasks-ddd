@@ -14,7 +14,14 @@ class UpdateUserUseCase
 
     public function execute(int $userId, UpdateUserDTO $dto): User
     {
+        if ($userId !== $dto->id) {
+            throw new \Exception('IDs não correspondem');
+        }
+
         $user = $this->userRepository->findById($userId);
+        if (!$user) {
+            throw new \Exception('Usuário não encontrado');
+        }
 
         $updateData = array_filter([
             'name' => $dto->name,
