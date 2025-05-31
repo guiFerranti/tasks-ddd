@@ -14,7 +14,6 @@ class DeleteTaskUseCase
 
     public function execute(User $user, Task $task): void
     {
-        // Apenas admins podem deletar
         if ($user->role !== \App\Domain\Users\Enums\UserRole::ADMIN->value) {
             throw new \Exception("Acesso negado: apenas administradores podem excluir tarefas", 403);
         }

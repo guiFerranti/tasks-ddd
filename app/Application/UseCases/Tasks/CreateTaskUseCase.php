@@ -13,7 +13,7 @@ class CreateTaskUseCase
         private TaskRepositoryInterface $taskRepository
     ) {}
 
-    public function execute(User $creator, CreateTaskDTO $dto): Task
+    public function execute($creator, CreateTaskDTO $dto): Task
     {
         return $this->taskRepository->create([
             'title' => $dto->title,
