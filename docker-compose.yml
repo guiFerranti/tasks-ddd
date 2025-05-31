@@ -46,10 +46,38 @@ services:
         networks:
             - laravel_network
 
+    sonarqube:
+        image: sonarqube:community
+        container_name: sonarqube
+        depends_on:
+            - sonardb
+        ports:
+            - "9000:9000"
+        environment:
+            - SONAR_JDBC_URL=jdbc:postgresql://sonardb:5432/sonar
+            - SONAR_JDBC_USERNAME=sonar
+            - SONAR_JDBC_PASSWORD=sonar
+        networks:
+            - laravel_network
+
+    sonardb:
+        image: postgres:13
+        container_name: sonar-db
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: sonar
+            POSTGRES_PASSWORD: sonar
+            POSTGRES_DB: sonar
+        volumes:
+            - sonar-db-data:/var/lib/postgresql/data
+        networks:
+            - laravel_network
 networks:
     laravel_network:
         driver: bridge
 
 volumes:
     dbdata:
+        driver: local
+    sonar-db-data:
         driver: local
