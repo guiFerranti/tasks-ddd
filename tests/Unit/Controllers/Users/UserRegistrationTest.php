@@ -1,13 +1,11 @@
 <?php
 
-namespace Tests\Unit\Controllers;
+namespace Tests\Unit\Controllers\Users;
 
 use App\Application\DTOs\RegisterUserDTO;
 use App\Application\UseCases\Users\RegisterUserUseCase;
 use App\Domain\Users\Entities\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Mockery;
 use Tests\TestCase;
 
@@ -126,27 +124,26 @@ class UserRegistrationTest extends TestCase
             ->assertJsonValidationErrors(['password']);
     }
 
-    //
-    ///** @test */
-    //public function it_rejects_duplicate_email_and_cpf()
-    //{
-    //    // Criar usuário existente no banco
-    //    User::factory()->create([
-    //        'email' => 'existing@example.com',
-    //        'cpf' => '111.222.333-44'
-    //    ]);
-    //
-    //    $payload = [
-    //        'name' => 'John Doe',
-    //        'email' => 'existing@example.com', // Email duplicado
-    //        'cpf' => '111.222.333-44', // CPF duplicado
-    //        'password' => 'password123',
-    //        'password_confirmation' => 'password123',
-    //    ];
-    //
-    //    $response = $this->postJson('/api/users', $payload);
-    //
-    //    $response->assertStatus(422)
-    //        ->assertJsonValidationErrors(['email', 'cpf']);
-    //}
+    /** @test */
+    public function it_rejects_duplicate_email_and_cpf()
+    {
+        // Criar usuário existente no banco
+        User::factory()->create([
+            'email' => 'existing@example.com',
+            'cpf' => '111.222.333-44'
+        ]);
+
+        $payload = [
+            'name' => 'John Doe',
+            'email' => 'existing@example.com', // Email duplicado
+            'cpf' => '111.222.333-44', // CPF duplicado
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ];
+
+        $response = $this->postJson('/api/users', $payload);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['email', 'cpf']);
+    }
 }
