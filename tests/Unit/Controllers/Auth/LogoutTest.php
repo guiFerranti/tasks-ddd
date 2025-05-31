@@ -34,6 +34,7 @@ class LogoutTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_it_logs_out_successfully()
     {
         $this->useCaseMock->shouldReceive('execute')
@@ -47,12 +48,14 @@ class LogoutTest extends TestCase
             ->assertJson(['message' => 'Logout realizado com sucesso']);
     }
 
+    /** @test */
     public function test_it_requires_authentication()
     {
         $response = $this->postJson('/api/auth/logout');
         $response->assertStatus(401);
     }
 
+    /** @test */
     public function test_it_handles_logout_failure()
     {
         $this->useCaseMock->shouldReceive('execute')

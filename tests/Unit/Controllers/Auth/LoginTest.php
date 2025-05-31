@@ -31,6 +31,7 @@ class LoginTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_it_logs_in_successfully()
     {
         $user = User::factory()->create([
@@ -55,6 +56,7 @@ class LoginTest extends TestCase
             ->assertJsonStructure(['token']);
     }
 
+    /** @test */
     public function test_it_returns_unauthorized_with_invalid_credentials()
     {
         $payload = [
@@ -71,6 +73,7 @@ class LoginTest extends TestCase
             ->assertJson(['error' => 'Credenciais inválidas']);
     }
 
+    /** @test */
     public function test_it_validates_login_input()
     {
         $invalidPayloads = [

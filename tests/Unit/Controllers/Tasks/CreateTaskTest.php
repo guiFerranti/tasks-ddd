@@ -37,6 +37,7 @@ class CreateTaskTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_it_creates_task_successfully()
     {
         $assignedUser = User::factory()->create();
@@ -68,6 +69,7 @@ class CreateTaskTest extends TestCase
             ]);
     }
 
+    /** @test */
     public function test_it_validates_required_fields()
     {
         $response = $this->withHeaders([
@@ -83,6 +85,7 @@ class CreateTaskTest extends TestCase
             ]);
     }
 
+    /** @test */
     public function test_it_handles_user_not_found()
     {
         $payload = [
@@ -107,12 +110,14 @@ class CreateTaskTest extends TestCase
             ]);
     }
 
+    /** @test */
     public function test_it_requires_authentication()
     {
         $response = $this->postJson('/api/tasks', []);
         $response->assertStatus(401);
     }
 
+    /** @test */
     public function test_it_validates_status_enum()
     {
         $payload = [

@@ -41,6 +41,7 @@ class ListDeletedTasksTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_admin_can_list_deleted_tasks()
     {
         $tasks = Task::factory()->count(2)->create(['deleted_at' => now()]);
@@ -57,6 +58,7 @@ class ListDeletedTasksTest extends TestCase
             ->assertJsonCount(2);
     }
 
+    /** @test */
     public function test_non_admin_cannot_list_deleted_tasks()
     {
         $response = $this->withHeaders([
@@ -66,6 +68,7 @@ class ListDeletedTasksTest extends TestCase
         $response->assertStatus(403);
     }
 
+    /** @test */
     public function test_it_filters_deleted_tasks_by_assigned_user()
     {
         $assignedUser = User::factory()->create();
@@ -85,6 +88,7 @@ class ListDeletedTasksTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /** @test */
     public function test_it_validates_filter_parameters()
     {
         $invalidPayloads = [
@@ -102,6 +106,7 @@ class ListDeletedTasksTest extends TestCase
         }
     }
 
+    /** @test */
     public function test_it_handles_invalid_arguments()
     {
         $this->useCaseMock->shouldReceive('execute')
@@ -115,6 +120,7 @@ class ListDeletedTasksTest extends TestCase
             ->assertJson(['error' => 'Invalid filter']);
     }
 
+    /** @test */
     public function test_it_handles_server_errors()
     {
         $this->useCaseMock->shouldReceive('execute')

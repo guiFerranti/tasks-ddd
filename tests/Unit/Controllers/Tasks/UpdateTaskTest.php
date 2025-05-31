@@ -37,6 +37,7 @@ class UpdateTaskTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_it_updates_task_successfully()
     {
         $task = Task::factory()->create();
@@ -67,6 +68,7 @@ class UpdateTaskTest extends TestCase
             ]);
     }
 
+    /** @test */
     public function test_it_validates_update_data()
     {
         $task = Task::factory()->create();
@@ -85,6 +87,7 @@ class UpdateTaskTest extends TestCase
         }
     }
 
+    /** @test */
     public function test_it_handles_partial_updates()
     {
         $task = Task::factory()->create(['title' => 'Título original']);
@@ -108,6 +111,8 @@ class UpdateTaskTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */
     public function test_it_requires_authentication()
     {
         $task = Task::factory()->create();
@@ -115,6 +120,7 @@ class UpdateTaskTest extends TestCase
         $response->assertStatus(401);
     }
 
+    /** @test */
     public function test_it_handles_update_failure()
     {
         $task = Task::factory()->create();

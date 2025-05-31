@@ -36,6 +36,7 @@ class ListTasksTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_it_lists_tasks_successfully()
     {
         $tasks = Task::factory()->count(3)->create();
@@ -52,6 +53,7 @@ class ListTasksTest extends TestCase
             ->assertJsonCount(3);
     }
 
+    /** @test */
     public function test_it_filters_by_assigned_user()
     {
         $assignedUser = User::factory()->create();
@@ -71,6 +73,7 @@ class ListTasksTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /** @test */
     public function test_it_filters_by_status()
     {
         $payload = ['status' => 'completed'];
@@ -89,6 +92,7 @@ class ListTasksTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /** @test */
     public function test_it_validates_filter_parameters()
     {
         $invalidPayloads = [
@@ -106,12 +110,14 @@ class ListTasksTest extends TestCase
         }
     }
 
+    /** @test */
     public function test_it_requires_authentication()
     {
         $response = $this->getJson('/api/tasks');
         $response->assertStatus(401);
     }
 
+    /** @test */
     public function test_it_handles_invalid_arguments()
     {
         $this->useCaseMock->shouldReceive('execute')
@@ -125,6 +131,7 @@ class ListTasksTest extends TestCase
             ->assertJson(['error' => 'Invalid filter']);
     }
 
+    /** @test */
     public function test_it_handles_server_errors()
     {
         $this->useCaseMock->shouldReceive('execute')

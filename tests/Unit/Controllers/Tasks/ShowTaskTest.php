@@ -35,6 +35,7 @@ class ShowTaskTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_it_shows_task_successfully()
     {
         $task = Task::factory()->create();
@@ -62,6 +63,7 @@ class ShowTaskTest extends TestCase
             ]);
     }
 
+    /** @test */
     public function test_it_returns_404_when_task_not_found()
     {
         $nonExistentId = 999;
@@ -78,6 +80,7 @@ class ShowTaskTest extends TestCase
             ->assertJson(['error' => 'Tarefa não encontrada']);
     }
 
+    /** @test */
     public function test_it_requires_authentication()
     {
         $task = Task::factory()->create();
@@ -85,6 +88,7 @@ class ShowTaskTest extends TestCase
         $response->assertStatus(401);
     }
 
+    /** @test */
     public function test_it_handles_repository_errors()
     {
         $task = Task::factory()->create();

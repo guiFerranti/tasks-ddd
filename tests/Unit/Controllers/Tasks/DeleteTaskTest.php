@@ -40,6 +40,7 @@ class DeleteTaskTest extends TestCase
         parent::tearDown();
     }
 
+    /** @test */
     public function test_admin_can_delete_task()
     {
         $task = Task::factory()->create();
@@ -55,6 +56,7 @@ class DeleteTaskTest extends TestCase
         $response->assertStatus(204);
     }
 
+    /** @test */
     public function test_non_admin_cannot_delete_task()
     {
         $task = Task::factory()->create();
@@ -67,6 +69,7 @@ class DeleteTaskTest extends TestCase
             ->assertJson(['error' => 'Acesso negado: apenas administradores']);
     }
 
+    /** @test */
     public function test_requires_authentication()
     {
         $task = Task::factory()->create();
@@ -74,6 +77,7 @@ class DeleteTaskTest extends TestCase
         $response->assertStatus(401);
     }
 
+    /** @test */
     public function test_handles_deletion_failure()
     {
         $task = Task::factory()->create();
