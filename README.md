@@ -159,11 +159,28 @@ erDiagram
 
 ## 4. Fluxo de Requisições
 
-A seguir, descrevemos o fluxo de requisições principais para interação com a API, utilizando `{{baseUrl}}` (por exemplo, `http://localhost`) como URL base. Importante: após o passo de **Login**, todas as requisições subsequentes devem enviar o cabeçalho de autenticação:
+A seguir, descrevemos o fluxo de requisições principais para interação com a API, utilizando `{{baseUrl}}` (por exemplo, `http://localhost`) como URL base.  
+**Importante**: após o passo de **Login**, todas as requisições subsequentes devem enviar o cabeçalho de autenticação:
 
 ```
 Authorization: Bearer {token}
 ```
+
+Para fins de teste, dois usuários já são criados via seeder:
+- **Admin**: `admin@example.com` / `admin123` (com papel de administrador)
+- **Usuário regular**: `user@example.com` / `user123`
+
+Além disso, algumas tarefas já estão inseridas no banco para facilitar a visualização dos dados via requisições. No entanto, a seguir será demonstrado um fluxo de utilização da API, começando pelo registro de um novo usuário.
+
+O fluxo consiste nos seguintes passos:
+
+1. **Registro** de um novo usuário via `/api/register`
+2. **Login** via `/api/login`
+3. **Criação de Tarefa** via `/api/tasks`
+4. **Atualização de Tarefa** via `/api/tasks/{id}` (com método PUT)
+5. **Logout** via `/api/logout`
+
+Cada uma dessas etapas exige ou retorna um token JWT válido, que deverá ser utilizado nas próximas requisições como mostrado no cabeçalho acima.
 
 ### 4.1 Criar um Usuário
 
