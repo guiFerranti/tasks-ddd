@@ -337,3 +337,149 @@ Authorization: Bearer {token}
     * `401 Unauthorized` caso o token não seja válido ou já tenha expirado.
 
 > **Nota**: Para recuperar o arquivo completo de requisições e variáveis de ambiente, importe a coleção Postman disponibilizada na raiz do projeto. O fluxo acima segue essa mesma ordem e formato, utilizando `localhost` como `{{baseUrl}}`.
+
+## 5. Configuração e Deploy
+
+Este é o guia de execução do projeto, abordando desde a clonação do repositório até a execução dos testes e configuração do Postman.
+
+### Requisitos
+
+* Docker e Docker Compose instalados
+* Git
+* Composer (opcional, se não utilizar dentro do container)
+
+### Passos para Execução Local
+
+1. Clone o repositório:
+
+   ```bash
+   git clone https://github.com/guiFerranti/tasks-ddd.git
+   cd tasks-ddd
+   ```
+
+2. Copie o arquivo `.env.example` para `.env`:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Suba os containers com Docker Compose:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Acesse o container da aplicação como root:
+
+   ```bash
+   docker compose exec --user root app bash
+   ```
+
+5. Dê permissão à pasta de armazenamento:
+
+   ```bash
+   chmod -R 777 storage
+   ```
+
+6. Instale as dependências PHP:
+
+   ```bash
+   composer install
+   ```
+
+7. Rode as migrações:
+
+   ```bash
+   php artisan migrate
+   ```
+
+8. Rode os seeders:
+
+   ```bash
+   php artisan db:seed
+   ```
+
+### Executando os Testes
+
+Se desejar rodar os testes automatizados:
+
+```bash
+php artisan test
+```
+
+---
+
+### Importando a Coleção no Postman
+
+O projeto possui um arquivo `.postman_collection.json` na raiz, contendo a coleção completa de requisições da API.
+
+#### Passo a passo:
+
+1. Abra o Postman.
+2. No menu lateral esquerdo, clique em "Import".
+3. Selecione a aba "File" e escolha o arquivo `.postman_collection.json` na raiz do projeto.
+4. Clique em "Import" para carregar a coleção.
+5. Em seguida, acesse o menu "Environments" e crie uma nova variável global:
+
+    * **Nome**: `baseUrl`
+    * **Valor**: `http://localhost`
+6. Salve e selecione o ambiente criado na barra superior do Postman.
+
+A coleção está pronta para uso com os endpoints da aplicação local.
+
+## 6. Testes Automatizados: Estratégia Utilizada e Métricas de Cobertura
+
+### Ferramentas Utilizadas
+
+* **PHPUnit**: Framework de testes utilizado para implementar testes unitários e de integração.
+* **Mockery**: Utilizado para criação de mocks nos testes de unitário, especialmente em testes de use cases.
+* **SonarQube**: Ferramenta de análise estática de código utilizada para medir a cobertura dos testes e a manutenibilidade do projeto.
+
+### Estratégia de Testes
+
+A abordagem adotada segue o padrão de testes unitários para regras de negócio e testes de integração para controladores HTTP.
+
+#### Testes de Use Cases
+
+* Os use cases da camada de aplicação foram testados isoladamente com mocks dos repositórios.
+* Casos positivos e negativos foram validados, incluindo cenários de exceção e validação de permissão (ex: apenas admins podem deletar tarefas).
+* Exemplo: `DeleteTaskUseCaseTest` cobre as seguintes situações:
+
+    * Exclusão bem-sucedida por um admin.
+    * Tentativa de exclusão por um usuário comum (gera exceção 403).
+    * Falha no repositório ao excluir (gera exceção).
+
+#### Testes de Controllers
+
+* Foram implementados testes de integração nos endpoints dos controladores.
+* Uso do `RefreshDatabase` garante um banco limpo a cada execução.
+* Exemplo: `CreateTaskTest` testa o endpoint `/api/tasks` com os seguintes cenários:
+
+    * Criação de tarefa com sucesso (status 201).
+    * Validação de campos obrigatórios (status 422).
+    * Usuário atribuído inexistente (status 422 com mensagem customizada).
+    * Falta de autenticação (status 401).
+    * Validação do enum `status`.
+
+### Métricas de Cobertura
+
+* O projeto foi escaneado pelo **SonarQube**, fornecendo as seguintes métricas:
+
+    * **Cobertura de testes unitários**: acima de 75% nas camadas de aplicação e domínio.
+    * **Duplicidade de código**: abaixo de 3%.
+    * **Manutenibilidade**: classificação A com código limpo e métodos pequenos.
+    * **Complexidade Cognitiva**: mantida baixa com métodos curtos e responsabilidades bem definidas.
+
+### Execução dos Testes
+
+Para rodar todos os testes, utilize:
+
+```bash
+php artisan test
+```
+
+A saída indicará o número de testes executados, asserts e erros, se houver.
+
+---
+
+Este conjunto de testes garante que as regras de negócio essenciais da aplicação estejam protegidas contra regressões e que a API responda corretamente a cenários esperados e inesperados.
