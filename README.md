@@ -365,6 +365,22 @@ Este é o guia de execução do projeto, abordando desde a clonação do reposit
 * Git
 * Composer (opcional, se não utilizar dentro do container)
 
+## Requisitos de Rede
+
+Para que a aplicação funcione corretamente em ambiente local utilizando Docker, é necessário garantir que as seguintes portas estejam liberadas no seu sistema operacional ou firewall:
+
+| Serviço     | Porta(s) Necessária(s) | Descrição                                  |
+|-------------|------------------------|--------------------------------------------|
+| Nginx       | 81, 443                | Acesso à aplicação via HTTP (81) e HTTPS (443) |
+| MySQL       | 3307                   | Conexão com o banco de dados MySQL         |
+| SonarQube   | 9000                   | Acesso à interface web do SonarQube        |
+
+**Importante:**  
+Certifique-se de que nenhuma outra aplicação esteja utilizando essas portas. Caso estejam ocupadas, você poderá ter falhas na inicialização dos containers.
+
+Além disso, ao executar o Docker Compose, é recomendado estar com privilégios de administrador ou garantir que o Docker Desktop tenha permissão para abrir portas de rede.
+
+
 ### Passos para Execução Local
 
 1. Clone o repositório:
@@ -425,6 +441,16 @@ php artisan test
 ```
 
 ---
+
+### Documentação da API
+
+A documentação completa da API está disponível localmente após a aplicação estar em execução.
+
+📄 Para acessá-la, basta abrir o seguinte endereço no seu navegador:
+
+[http://localhost/docs/index.html](http://localhost/docs/index.html)
+
+Ela contém detalhes sobre os endpoints disponíveis, métodos suportados, parâmetros esperados e exemplos de uso.
 
 ### Importando a Coleção no Postman
 
