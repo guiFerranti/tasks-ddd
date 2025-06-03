@@ -167,6 +167,7 @@ class UserController extends Controller
      * Atualiza informações do usuário (exceto senha).
      *
      * @authenticated
+     * @header Authorization Bearer {token}
      * @urlParam id integer required ID do usuário. Example: 1
      * @bodyParam name string Nome. Example: João Silva Alterado
      * @bodyParam email string Email. Example: novojoao@exemplo.com

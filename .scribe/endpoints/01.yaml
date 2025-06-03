@@ -127,6 +127,128 @@ endpoints:
     custom: []
   -
     httpMethods:
+      - GET
+    uri: api/users
+    metadata:
+      groupName: Usuários
+      groupDescription: |-
+
+        Endpoints para gerenciamento de usuários (CRUD, alteração de senha).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar Todos Usuários (Admin)'
+      description: 'Lista todos os usuários registrados (apenas administradores).'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          [{
+            "id": 1,
+            "name": "Admin",
+            "email": "admin@exemplo.com",
+            "role": "admin"
+          }]
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "error": "Acesso negado: apenas administradores"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/users/{id}'
+    metadata:
+      groupName: Usuários
+      groupDescription: |-
+
+        Endpoints para gerenciamento de usuários (CRUD, alteração de senha).
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Excluir Usuário (Soft Delete - Admin)'
+      description: 'Remove um usuário do sistema (soft delete, apenas administradores).'
+      authenticated: true
+      custom: []
+    headers:
+      Authorization: 'Bearer {token}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'ID do usuário.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 204
+        content: '{}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 403
+        content: |-
+          {
+            "error": "Acesso negado: apenas administradores"
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "error": "Usuário não encontrado"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
       - PUT
     uri: api/users/password
     metadata:
@@ -289,6 +411,7 @@ endpoints:
       authenticated: true
       custom: []
     headers:
+      Authorization: 'Bearer {token}'
       Content-Type: application/json
       Accept: application/json
     urlParameters:
@@ -361,128 +484,6 @@ endpoints:
         content: |-
           {
             "error": "Acesso negado: você só pode atualizar seu próprio perfil"
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - GET
-    uri: api/users
-    metadata:
-      groupName: Usuários
-      groupDescription: |-
-
-        Endpoints para gerenciamento de usuários (CRUD, alteração de senha).
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Listar Todos Usuários (Admin)'
-      description: 'Lista todos os usuários registrados (apenas administradores).'
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {token}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters: []
-    cleanUrlParameters: []
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 200
-        content: |-
-          [{
-            "id": 1,
-            "name": "Admin",
-            "email": "admin@exemplo.com",
-            "role": "admin"
-          }]
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "error": "Acesso negado: apenas administradores"
-          }
-        headers: []
-        description: ''
-        custom: []
-    responseFields: []
-    auth: []
-    controller: null
-    method: null
-    route: null
-    custom: []
-  -
-    httpMethods:
-      - DELETE
-    uri: 'api/users/{id}'
-    metadata:
-      groupName: Usuários
-      groupDescription: |-
-
-        Endpoints para gerenciamento de usuários (CRUD, alteração de senha).
-      subgroup: ''
-      subgroupDescription: ''
-      title: 'Excluir Usuário (Soft Delete - Admin)'
-      description: 'Remove um usuário do sistema (soft delete, apenas administradores).'
-      authenticated: true
-      custom: []
-    headers:
-      Authorization: 'Bearer {token}'
-      Content-Type: application/json
-      Accept: application/json
-    urlParameters:
-      id:
-        name: id
-        description: 'ID do usuário.'
-        required: true
-        example: 1
-        type: integer
-        enumValues: []
-        exampleWasSpecified: true
-        nullable: false
-        custom: []
-    cleanUrlParameters:
-      id: 1
-    queryParameters: []
-    cleanQueryParameters: []
-    bodyParameters: []
-    cleanBodyParameters: []
-    fileParameters: []
-    responses:
-      -
-        status: 204
-        content: '{}'
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 403
-        content: |-
-          {
-            "error": "Acesso negado: apenas administradores"
-          }
-        headers: []
-        description: ''
-        custom: []
-      -
-        status: 404
-        content: |-
-          {
-            "error": "Usuário não encontrado"
           }
         headers: []
         description: ''

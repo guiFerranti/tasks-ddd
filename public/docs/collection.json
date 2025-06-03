@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "17b3cbb2-84e1-4f5d-98ab-9177210558af",
+        "_postman_id": "535bb10a-52c4-4052-9275-7e3af988dd53",
         "description": "API para gest\u00e3o de tarefas colaborativas",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
@@ -118,219 +118,6 @@
             "description": "\nEndpoints para gerenciamento de tarefas (CRUD, listagem com filtros).",
             "item": [
                 {
-                    "name": "Listar Tarefas com Filtros",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tasks",
-                            "query": [
-                                {
-                                    "key": "assignedTo",
-                                    "value": "2",
-                                    "description": "Filtrar por usu\u00e1rio atribu\u00eddo.",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "status",
-                                    "value": "pending",
-                                    "description": "Filtrar por status.",
-                                    "disabled": false
-                                },
-                                {
-                                    "key": "createdAfter",
-                                    "value": "2024-05-01",
-                                    "description": "date Filtrar por data de cria\u00e7\u00e3o (YYYY-MM-DD).",
-                                    "disabled": false
-                                }
-                            ],
-                            "raw": "{{baseUrl}}\/api\/tasks?assignedTo=2&status=pending&createdAfter=2024-05-01"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {token}"
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Lista tarefas com filtragem avan\u00e7ada."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "[{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o de equipe\",\n  \"status\": \"pending\",\n  \"assigned_to\": 2\n}]",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Criar Nova Tarefa",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tasks",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tasks"
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {token}"
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"title\":\"Reuni\u00e3o de equipe\",\"description\":\"Discutir planejamento do pr\u00f3ximo trimestre\",\"status\":\"pending\",\"assigned_to\":2}"
-                        },
-                        "description": "Cria uma nova tarefa atribu\u00edda a um usu\u00e1rio espec\u00edfico."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 201,
-                            "body": "{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o de equipe\",\n  \"status\": \"pending\",\n  \"assigned_to\": 2,\n  \"created_by\": 1,\n  \"created_at\": \"2024-05-20T00:00:00.000000Z\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 400,
-                            "body": "{\n  \"error\": \"Usu\u00e1rio atribu\u00eddo n\u00e3o encontrado\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"errors\": {\n    \"title\": [\"O campo t\u00edtulo \u00e9 obrigat\u00f3rio\"]\n  }\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Detalhes da Tarefa",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tasks\/:task",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tasks\/:task",
-                            "variable": [
-                                {
-                                    "id": "task",
-                                    "key": "task",
-                                    "value": "architecto",
-                                    "description": "The task."
-                                },
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID da tarefa."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Retorna informa\u00e7\u00f5es detalhadas de uma tarefa espec\u00edfica."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o de equipe\",\n  \"description\": \"Discutir planejamento\",\n  \"status\": \"pending\",\n  \"created_by\": 1,\n  \"assigned_to\": 2\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"error\": \"Tarefa n\u00e3o encontrada\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Atualizar Tarefa",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/tasks\/:task_id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/tasks\/:task_id",
-                            "variable": [
-                                {
-                                    "id": "task_id",
-                                    "key": "task_id",
-                                    "value": "1",
-                                    "description": "The ID of the task."
-                                },
-                                {
-                                    "id": "task",
-                                    "key": "task",
-                                    "value": "1",
-                                    "description": "ID da tarefa."
-                                }
-                            ]
-                        },
-                        "method": "PUT",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"title\":\"Reuni\u00e3o atualizada\",\"description\":\"Novo t\u00f3pico: Or\u00e7amento\",\"status\":\"in_progress\"}"
-                        },
-                        "description": "Atualiza informa\u00e7\u00f5es de uma tarefa existente."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o atualizada\",\n  \"status\": \"in_progress\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n  \"error\": \"Apenas o criador pode editar a tarefa\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
                     "name": "Excluir Tarefa (Admin)",
                     "request": {
                         "url": {
@@ -342,7 +129,7 @@
                                 {
                                     "id": "task_id",
                                     "key": "task_id",
-                                    "value": "1",
+                                    "value": "16",
                                     "description": "The ID of the task."
                                 },
                                 {
@@ -435,7 +222,10 @@
                                 "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"assigned_to\":16,\"status\":\"pending\",\"created_after\":\"2025-06-03\"}"
+                        },
                         "description": "Lista tarefas removidas via soft delete (apenas administradores)."
                     },
                     "response": [
@@ -443,6 +233,230 @@
                             "header": [],
                             "code": 200,
                             "body": "[{\n  \"id\": 1,\n  \"title\": \"Tarefa exclu\u00edda\",\n  \"deleted_at\": \"2024-05-20T12:00:00.000000Z\"\n}]",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Listar Tarefas com Filtros",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tasks",
+                            "query": [
+                                {
+                                    "key": "assignedTo",
+                                    "value": "2",
+                                    "description": "Filtrar por usu\u00e1rio atribu\u00eddo.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "pending",
+                                    "description": "Filtrar por status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "createdAfter",
+                                    "value": "2024-05-01",
+                                    "description": "date Filtrar por data de cria\u00e7\u00e3o (YYYY-MM-DD).",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/tasks?assignedTo=2&status=pending&createdAfter=2024-05-01"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"assigned_to\":16,\"status\":\"pending\",\"created_after\":\"2025-06-03\"}"
+                        },
+                        "description": "Lista tarefas com filtragem avan\u00e7ada."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "[{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o de equipe\",\n  \"status\": \"pending\",\n  \"assigned_to\": 2\n}]",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Criar Nova Tarefa",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tasks",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tasks"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"Reuni\u00e3o de equipe\",\"description\":\"Discutir planejamento do pr\u00f3ximo trimestre\",\"status\":\"pending\",\"assigned_to\":2}"
+                        },
+                        "description": "Cria uma nova tarefa atribu\u00edda a um usu\u00e1rio espec\u00edfico."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o de equipe\",\n  \"status\": \"pending\",\n  \"assigned_to\": 2,\n  \"created_by\": 1,\n  \"created_at\": \"2024-05-20T00:00:00.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"error\": \"Usu\u00e1rio atribu\u00eddo n\u00e3o encontrado\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"errors\": {\n    \"title\": [\"O campo t\u00edtulo \u00e9 obrigat\u00f3rio\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Detalhes da Tarefa",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tasks\/:task",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tasks\/:task",
+                            "variable": [
+                                {
+                                    "id": "task",
+                                    "key": "task",
+                                    "value": "architecto",
+                                    "description": "The task."
+                                },
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID da tarefa."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retorna informa\u00e7\u00f5es detalhadas de uma tarefa espec\u00edfica."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o de equipe\",\n  \"description\": \"Discutir planejamento\",\n  \"status\": \"pending\",\n  \"created_by\": 1,\n  \"assigned_to\": 2\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"error\": \"Tarefa n\u00e3o encontrada\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Atualizar Tarefa",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tasks\/:task_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tasks\/:task_id",
+                            "variable": [
+                                {
+                                    "id": "task_id",
+                                    "key": "task_id",
+                                    "value": "16",
+                                    "description": "The ID of the task."
+                                },
+                                {
+                                    "id": "task",
+                                    "key": "task",
+                                    "value": "1",
+                                    "description": "ID da tarefa."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\":\"Reuni\u00e3o atualizada\",\"description\":\"Novo t\u00f3pico: Or\u00e7amento\",\"status\":\"in_progress\"}"
+                        },
+                        "description": "Atualiza informa\u00e7\u00f5es de uma tarefa existente."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 1,\n  \"title\": \"Reuni\u00e3o atualizada\",\n  \"status\": \"in_progress\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"error\": \"Apenas o criador pode editar a tarefa\"\n}",
                             "name": ""
                         }
                     ]
@@ -499,6 +513,104 @@
                             "header": [],
                             "code": 422,
                             "body": "{\n  \"errors\": {\n    \"name\": [\"O campo nome \u00e9 obrigat\u00f3rio\"],\n    \"email\": [\"Formato de email inv\u00e1lido\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Listar Todos Usu\u00e1rios (Admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Lista todos os usu\u00e1rios registrados (apenas administradores)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "[{\n  \"id\": 1,\n  \"name\": \"Admin\",\n  \"email\": \"admin@exemplo.com\",\n  \"role\": \"admin\"\n}]",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"error\": \"Acesso negado: apenas administradores\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Excluir Usu\u00e1rio (Soft Delete - Admin)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "ID do usu\u00e1rio."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Remove um usu\u00e1rio do sistema (soft delete, apenas administradores)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 204,
+                            "body": "{}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"error\": \"Acesso negado: apenas administradores\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"error\": \"Usu\u00e1rio n\u00e3o encontrado\"\n}",
                             "name": ""
                         }
                     ]
@@ -620,6 +732,10 @@
                         "method": "PUT",
                         "header": [
                             {
+                                "key": "Authorization",
+                                "value": "Bearer {token}"
+                            },
+                            {
                                 "key": "Content-Type",
                                 "value": "application\/json"
                             },
@@ -645,104 +761,6 @@
                             "header": [],
                             "code": 403,
                             "body": "{\n  \"error\": \"Acesso negado: voc\u00ea s\u00f3 pode atualizar seu pr\u00f3prio perfil\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Listar Todos Usu\u00e1rios (Admin)",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users"
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {token}"
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Lista todos os usu\u00e1rios registrados (apenas administradores)."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "[{\n  \"id\": 1,\n  \"name\": \"Admin\",\n  \"email\": \"admin@exemplo.com\",\n  \"role\": \"admin\"\n}]",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n  \"error\": \"Acesso negado: apenas administradores\"\n}",
-                            "name": ""
-                        }
-                    ]
-                },
-                {
-                    "name": "Excluir Usu\u00e1rio (Soft Delete - Admin)",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users\/:id",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users\/:id",
-                            "variable": [
-                                {
-                                    "id": "id",
-                                    "key": "id",
-                                    "value": "1",
-                                    "description": "ID do usu\u00e1rio."
-                                }
-                            ]
-                        },
-                        "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "Authorization",
-                                "value": "Bearer {token}"
-                            },
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Remove um usu\u00e1rio do sistema (soft delete, apenas administradores)."
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 204,
-                            "body": "{}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n  \"error\": \"Acesso negado: apenas administradores\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"error\": \"Usu\u00e1rio n\u00e3o encontrado\"\n}",
                             "name": ""
                         }
                     ]

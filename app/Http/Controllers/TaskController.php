@@ -79,6 +79,7 @@ class TaskController extends Controller
      * Atualiza informações de uma tarefa existente.
      *
      * @authenticated
+     * @header Authorization Bearer {token}
      * @urlParam task integer required ID da tarefa. Example: 1
      * @bodyParam title string Título. Example: Reunião atualizada
      * @bodyParam description string Descrição. Example: Novo tópico: Orçamento
@@ -203,6 +204,7 @@ class TaskController extends Controller
      * Retorna informações detalhadas de uma tarefa específica.
      *
      * @authenticated
+     * @header Authorization Bearer {token}
      * @urlParam id integer required ID da tarefa. Example: 1
      *
      * @response 200 {
